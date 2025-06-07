@@ -1,0 +1,185 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OperateEDU OpsEngine API",
+    "version": "1.0.0",
+    "description": "One-stop backend for toolkit generation, calendar creation, PD planning, compliance support, and member concierge."
+  },
+  "servers": [
+    {
+      "url": "https://your-custom-backend.com/api"
+    }
+  ],
+  "paths": {
+    "/generateToolkit": {
+      "post": {
+        "summary": "Generate a custom toolkit or playbook",
+        "operationId": "generateToolkit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "topic": { "type": "string" },
+                  "audienceRole": { "type": "string" },
+                  "schoolSize": { "type": "string" },
+                  "format": { "type": "string", "enum": ["word", "google_doc", "pdf"] }
+                },
+                "required": ["topic", "audienceRole"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Toolkit document generated",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "docUrl": { "type": "string" } } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buildCalendar": {
+      "post": {
+        "summary": "Build school ops calendar",
+        "operationId": "buildCalendar",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "startDate": { "type": "string", "format": "date" },
+                  "endDate": { "type": "string", "format": "date" },
+                  "region": { "type": "string" },
+                  "includeCompliance": { "type": "boolean" }
+                },
+                "required": ["startDate", "endDate"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calendar created",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "calendarUrl": { "type": "string" } } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planPD": {
+      "post": {
+        "summary": "Plan a PD or training session",
+        "operationId": "planPD",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "topic": { "type": "string" },
+                  "durationMinutes": { "type": "integer", "default": 60 },
+                  "format": { "type": "string", "enum": ["deck", "doc"] }
+                },
+                "required": ["topic"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PD session planned",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "outlineUrl": { "type": "string" } } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getComplianceChecklist": {
+      "get": {
+        "summary": "Get compliance checklist by role or state",
+        "operationId": "getComplianceChecklist",
+        "parameters": [
+          { "name": "role", "in": "query", "schema": { "type": "string" } },
+          { "name": "state", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compliance list returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "checklistItems": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getStrategy": {
+      "get": {
+        "summary": "Get school ops strategy support",
+        "operationId": "getStrategy",
+        "parameters": [
+          { "name": "query", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Strategy advice returned",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "response": { "type": "string" } } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getMemberContent": {
+      "get": {
+        "summary": "Get personalized membership content",
+        "operationId": "getMemberContent",
+        "parameters": [
+          { "name": "email", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Member content delivered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "toolkitRecommendation": { "type": "string" },
+                    "calendarReminders": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
